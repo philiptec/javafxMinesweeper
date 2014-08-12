@@ -1,4 +1,7 @@
 .button{
 -fx-background-color: #6B8E23;
--fx-background-insets: 4;
+-fx-background-insets: 3;
+-fx-text-alignment: center;
+-fx-font-size: 9;
+-fx-font-weight: bold;
 }
