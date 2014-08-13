@@ -27,7 +27,6 @@ public class MineSweeper extends Application{
 		private GridPane backPanel;
 		private BorderPane back;
 		private Random rnd = new Random();
-		private ImageView redFlag;
 		private Stage stage;
 		private int remainingBombs; 
 		private Label label;
@@ -36,7 +35,6 @@ public class MineSweeper extends Application{
 	public void start(Stage stage) throws Exception{
 		
 		this.stage = stage;
-		//redFlag = new ImageView(new Image("file:/src/main/resources/red_flag_30x30.png"));
 		
 		createGUI();
 		createGrid();
@@ -100,7 +98,7 @@ public class MineSweeper extends Application{
 	}
 	
 	private GridSquare createGridSquare(int row, int column){
-		GridSquare gridSquare = new GridSquare(row, column, redFlag);
+		GridSquare gridSquare = new GridSquare(row, column);
 
 		return gridSquare;
 	}
@@ -109,20 +107,49 @@ public class MineSweeper extends Application{
 		if(gridSquare.getGridSquare().getText().equals("F")) return;
 		if(gridSquare.isMine()) gameOver();
 		String s = gridSquare.getNextToCount();
+			if(s.equals("0")){
+				checkSurrounding(gridSquare);
+			}
 		gridSquare.getGridSquare().setStyle("-fx-background-color: #ffffff");
 		gridSquare.getGridSquare().setText(s);
+		gridSquare.reveal();
+	}
+	
+	private void checkSurrounding(GridSquare gridS){
+		int r = gridS.getRow();
+		int c = gridS.getColumn();
+		GridSquare gs;
+		
+		if((gs = getFromIndex(r-1, c)) != null && !gs.isRevealed()) revealAndCheck(gs, gs.getNextToCount());
+		if((gs = getFromIndex(r-1, c+1)) != null && !gs.isRevealed()) revealAndCheck(gs, gs.getNextToCount());
+		if((gs = getFromIndex(r, c+1)) != null && !gs.isRevealed()) revealAndCheck(gs, gs.getNextToCount());
+		if((gs = getFromIndex(r+1, c+1)) != null && !gs.isRevealed()) revealAndCheck(gs, gs.getNextToCount());
+		if((gs = getFromIndex(r+1, c)) != null && !gs.isRevealed()) revealAndCheck(gs, gs.getNextToCount());
+		if((gs = getFromIndex(r+1, c-1)) != null && !gs.isRevealed()) revealAndCheck(gs, gs.getNextToCount());
+		if((gs = getFromIndex(r, c-1)) != null && !gs.isRevealed()) revealAndCheck(gs, gs.getNextToCount());
+		if((gs = getFromIndex(r-1, c-1)) != null && !gs.isRevealed()) revealAndCheck(gs, gs.getNextToCount());
+	}
+	
+	private void revealAndCheck(GridSquare gs, String s){
+		if(s.equals("F")) return; 
+		gs.getGridSquare().setStyle("-fx-background-color: #ffffff");
+		gs.getGridSquare().setText(gs.getNextToCount());
+		gs.reveal();
+		if(s.equals("0")){
+			checkSurrounding(gs);
+		}
 	}
 	
 	private void gameOver(){
 		logger.debug("GameOver");
-		JOptionPane.showMessageDialog(null, "GAMEOVER");
+		JOptionPane.showMessageDialog(null, "GAME OVER");
 		reset();
 	}
 	
 	private void assignBombs(){
 		logger.debug("bombAssignment started");
 		totalSquares = boardWidth * boardHeight;
-		numberOfMines = totalSquares / 6;
+		numberOfMines = totalSquares / 5;
 		remainingBombs = numberOfMines;
 		label.setText("Bombs remaining = " + remainingBombs);
 		int w = -1;

@@ -14,17 +14,13 @@ public class GridSquare{
 		private int row = -1;
 		private int column = -1;
 		private boolean isMine = false;
-		private boolean markedAsBomb = false;
 		private int nextToCount = 0;
 		private int size = 30;
-		private ImageView redFlag;
 		private boolean revealed = false;
 		
-	public GridSquare(int row, int column, ImageView redFlag){
+	public GridSquare(int row, int column){
 		this.row = row;
 		this.column = column;
-		this.redFlag = redFlag;
-		//gridSquare.setGraphic(redFlag);
 		gridSquare = new Button();
 		gridSquare.setBorder(new Border(new BorderStroke(
 				Color.BLACK, BorderStrokeStyle.DOTTED, new CornerRadii(5), BorderStroke.THIN)));
@@ -59,14 +55,6 @@ public class GridSquare{
 	
 	public void setGridSquare(Button b){
 		this.gridSquare = b;
-	}
-	
-	public void markAsBomb(){
-		markedAsBomb = true;
-	}
-	
-	public void unmarkAsBomb(){
-		markedAsBomb = false;
 	}
 	
 	public int getRow(){
