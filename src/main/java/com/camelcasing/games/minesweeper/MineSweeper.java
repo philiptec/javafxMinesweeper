@@ -6,11 +6,13 @@ import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import javafx.animation.*;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.util.Duration;
 
 public class MineSweeper extends Application{
 
@@ -30,6 +32,9 @@ public class MineSweeper extends Application{
 		private Label remainingBombsLabel;
 		private Label timerLabel;
 		private MenuBar topMenuBar;
+		private Timeline timer;
+		private boolean timerRunning = false;
+		private Time time;
 		
 	@Override
 	public void start(Stage stage) throws Exception{
@@ -39,6 +44,7 @@ public class MineSweeper extends Application{
 		createGrid();
 		assignBombs();
 		assignNumbers();
+		createTimer();
 		
 		Scene root = new Scene(rootPane);
 		root.getStylesheets().add("stylesheet.css");
@@ -53,7 +59,7 @@ public class MineSweeper extends Application{
 		board = (GridPane)beanFactory.getBean("board");
 		remainingBombsLabel = (Label)beanFactory.getBean("label");
 		timerLabel = (Label)beanFactory.getBean("label");
-		timerLabel.setText("Timer 00:00");
+		timerLabel.setText("Timer: 00:00:00");
 		HBox hbox = (HBox)beanFactory.getBean("infoPanel");
 		hbox.getChildren().addAll(remainingBombsLabel, timerLabel);
 		boardAndInfo = (BorderPane)beanFactory.getBean("boardAndInfo");
@@ -62,11 +68,23 @@ public class MineSweeper extends Application{
 	
 	private void createMenuItems(){
 		topMenuBar = (MenuBar)beanFactory.getBean("topMenuBar");
+		
 		Menu gameMenu = (Menu)beanFactory.getBean("gameMenu");
 		MenuItem resetMenuItem = (MenuItem)beanFactory.getBean("resetMenuItem");
 		resetMenuItem.setOnAction(e -> reset());
-		gameMenu.getItems().add(resetMenuItem);
-		topMenuBar.getMenus().add(gameMenu);
+		MenuItem exitMenuItem = (MenuItem)beanFactory.getBean("exitMenuItem");
+		exitMenuItem.setOnAction(e -> System.exit(0));
+		
+		Menu timerMenu = new Menu("Timer");
+		MenuItem pause = new MenuItem("pause");
+		pause.setOnAction(e -> {
+			timerRunning = false;
+			timer.pause();
+		});
+		timerMenu.getItems().add(pause);
+		
+		gameMenu.getItems().addAll(resetMenuItem, exitMenuItem);
+		topMenuBar.getMenus().addAll(gameMenu, timerMenu);
 		rootPane.setTop(topMenuBar);
 	}
 	
@@ -76,7 +94,13 @@ public class MineSweeper extends Application{
 			for(int j = 0; j < squares[i].length; j++){
 				GridSquare gs = createGridSquare(i, j);
 				squares[i][j] = gs;
-				gs.getGridSquare().setOnAction(ae -> checkSquare(gs));
+				gs.getGridSquare().setOnAction(ae -> {
+					if(!timerRunning){
+						timerRunning = true;
+						timer.play();
+					}
+					checkSquare(gs);
+				});
 				gs.getGridSquare().setOnMouseClicked(me -> {
 					if(me.getButton() == javafx.scene.input.MouseButton.SECONDARY){
 						Button b = (Button) me.getSource();
@@ -89,6 +113,10 @@ public class MineSweeper extends Application{
 							b.setText("");
 							remainingBombs++;
 							remainingBombsLabel.setText("Bombs remaining = " + remainingBombs);
+						}
+						if(!timerRunning){
+							timerRunning = true;
+							timer.play();
 						}
 					}
 				});
@@ -110,7 +138,7 @@ public class MineSweeper extends Application{
 			if(s.equals("0")){
 				checkSurrounding(gridSquare);
 			}
-		gridSquare.getGridSquare().setStyle("-fx-background-color: #ffffff");
+		gridSquare.getGridSquare().setStyle("-fx-background-color: #f1f1f1");
 		gridSquare.getGridSquare().setText(s);
 		gridSquare.reveal();
 	}
@@ -142,6 +170,14 @@ public class MineSweeper extends Application{
 	
 	private void gameOver(){
 		logger.debug("GameOver");
+		timer.pause();
+			for(int i = 0; i < squares.length; i++){
+				for(int j = 0; j < squares[i].length; j++){
+					Button b = squares[i][j].getGridSquare();
+					b.setOnAction(e -> {});
+					b.setOnMouseClicked(e -> {});
+				}
+			}
 		remainingBombsLabel.setText("BOOM!");
 		showBombs();
 	}
@@ -204,10 +240,23 @@ public class MineSweeper extends Application{
 		}
 	}
 	
+	private void createTimer(){
+		time = new Time();
+		timer = new Timeline(new KeyFrame(Duration.millis(1000), e -> {
+			time.incrementSeconds();
+			timerLabel.setText("Timer: " + time);	
+		}));
+		timer.setCycleCount(Animation.INDEFINITE);
+	}
+	
 	public void reset(){
 		createGrid();
 		assignBombs();
 		assignNumbers();
+		timerRunning = false;
+		timer.pause();
+		timerLabel.setText("Timer: 00:00:00");
+		time.reset();
 		logger.debug("game reset");
 	}
 	
