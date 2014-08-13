@@ -9,3 +9,66 @@
 -fx-font-size: 16;
 -fx-font-weight: bold;
 }
+
+#button1{
+-fx-background-color: #6B8E23;
+-fx-background-insets: 3;
+-fx-text-alignment: center;
+-fx-text-fill: #0000FF;
+-fx-font-size: 9;
+-fx-font-weight: bold;
+}
+
+#button2{
+-fx-background-color: #6B8E23;
+-fx-background-insets: 3;
+-fx-text-alignment: center;
+-fx-text-fill: #006400;
+-fx-font-size: 9;
+-fx-font-weight: bold;
+}
+
+#button3{
+-fx-background-color: #6B8E23;
+-fx-background-insets: 3;
+-fx-text-alignment: center;
+-fx-text-fill: #FF0000;
+-fx-font-size: 9;
+-fx-font-weight: bold;
+}
+
+#button4{
+-fx-background-color: #6B8E23;
+-fx-background-insets: 3;
+-fx-text-alignment: center;
+-fx-text-fill: #FF7F24;
+-fx-font-size: 9;
+-fx-font-weight: bold;
+}
+
+#button5{
+-fx-background-color: #6B8E23;
+-fx-background-insets: 3;
+-fx-text-alignment: center;
+-fx-text-fill: #0000FF;
+-fx-font-size: 9;
+-fx-font-weight: bold;
+}
+
+#button6{
+-fx-background-color: #6B8E23;
+-fx-background-insets: 3;
+-fx-text-alignment: center;
+-fx-text-fill: #0000FF;
+-fx-font-size: 9;
+-fx-font-weight: bold;
+}
+
+#button7{
+-fx-background-color: #6B8E23;
+-fx-background-insets: 3;
+-fx-text-alignment: center;
+-fx-text-fill: #0000FF;
+-fx-font-size: 9;
+-fx-font-weight: bold;
+}

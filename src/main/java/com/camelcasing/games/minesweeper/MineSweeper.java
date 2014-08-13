@@ -74,7 +74,6 @@ public class MineSweeper extends Application{
 						b.setBorder(new Border(new BorderStroke(
 								Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(5), BorderStroke.THIN)));
 					});
-
 					checkSquare(gs);
 				});
 				gs.getGridSquare().setOnMouseClicked(me -> {

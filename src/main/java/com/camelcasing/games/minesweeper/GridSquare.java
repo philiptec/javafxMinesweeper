@@ -47,6 +47,22 @@ public class GridSquare{
 
 	public void setNextToCount(int nextToCount){
 		this.nextToCount = nextToCount;
+		switch(nextToCount){
+		case 1: gridSquare.setId("button1");
+			break;
+		case 2: gridSquare.setId("button2");
+			break;
+		case 3: gridSquare.setId("button3");
+			break;
+		case 4: gridSquare.setId("button4");
+			break;
+		case 5: gridSquare.setId("button5");
+			break;
+		case 6: gridSquare.setId("button6");
+			break;
+		case 7: gridSquare.setId("button7");
+			break;
+		}
 	}
 
 	public Button getGridSquare(){
