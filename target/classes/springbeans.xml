@@ -47,7 +47,7 @@
 		<property name="spacing" value="50"/>
 		<property name="alignment" ref="centrePosition"/>
 	</bean>
-	
+
 	
 	<!-- position classes -->
 	

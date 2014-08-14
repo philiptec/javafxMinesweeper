@@ -18,6 +18,7 @@ public class MineSweeper extends Application{
 
 		public final static Logger logger = Logger.getLogger(MineSweeper.class.getName());
 		public final static  ApplicationContext beanFactory = new ClassPathXmlApplicationContext("springbeans.xml");
+		public static Timeline timer;
 	
 		private int boardWidth = 16;
 		private int boardHeight = 16;
@@ -32,7 +33,6 @@ public class MineSweeper extends Application{
 		private Label remainingBombsLabel;
 		private Label timerLabel;
 		private MenuBar topMenuBar;
-		private Timeline timer;
 		private boolean timerRunning = false;
 		private Time time;
 		
@@ -94,34 +94,39 @@ public class MineSweeper extends Application{
 			for(int j = 0; j < squares[i].length; j++){
 				GridSquare gs = createGridSquare(i, j);
 				squares[i][j] = gs;
+				
 				gs.getGridSquare().setOnAction(ae -> {
-					if(!timerRunning){
-						timerRunning = true;
-						timer.play();
-					}
-					checkSquare(gs);
+					startTimerIfNotRunning();
+					if(!gs.isFlagged())checkSquare(gs);
 				});
+				
 				gs.getGridSquare().setOnMouseClicked(me -> {
 					if(me.getButton() == javafx.scene.input.MouseButton.SECONDARY){
 						Button b = (Button) me.getSource();
-						if(b.getText().equals("")){
+						if(!gs.isFlagged() && !gs.isRevealed()){
 							b.setStyle("-fx-text-fill: #ff0000");
-							b.setText("F");
+							gs.setFlagged(true);
+							gs.drawFlag();
 							remainingBombs--;
 							remainingBombsLabel.setText("Bombs remaining = " + remainingBombs);
-						}else if(b.getText().equals("F")){
-							b.setText("");
+						}else if(gs.isFlagged()){
+							gs.removeFlag();
+							gs.setFlagged(false);
 							remainingBombs++;
 							remainingBombsLabel.setText("Bombs remaining = " + remainingBombs);
 						}
-						if(!timerRunning){
-							timerRunning = true;
-							timer.play();
-						}
+						startTimerIfNotRunning();
 					}
 				});
 				board.add(squares[i][j].getGridSquare(), i, j);
 			}
+		}
+	}
+	
+	private void startTimerIfNotRunning(){
+		if(!timerRunning){
+			timerRunning = true;
+			timer.play();
 		}
 	}
 	

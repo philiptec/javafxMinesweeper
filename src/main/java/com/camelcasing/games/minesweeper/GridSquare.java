@@ -1,11 +1,13 @@
 package com.camelcasing.games.minesweeper;
 
+import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.*;
 
 public class GridSquare{
 
@@ -16,6 +18,7 @@ public class GridSquare{
 		private int nextToCount = 0;
 		private int size = 30;
 		private boolean revealed = false;
+		private boolean isFlagged = false;
 		
 	public GridSquare(int row, int column){
 		this.row = row;
@@ -67,6 +70,38 @@ public class GridSquare{
 	
 	public boolean isRevealed(){
 		return revealed;
+	}
+	
+	public boolean isFlagged(){
+		return isFlagged;
+	}
+	
+	public void setFlagged(boolean b){
+		isFlagged = b;
+	}
+	
+	public void drawFlag(){
+		Group g = new Group();
+		Line pole = new Line();
+		int q = size / 5;
+		pole.setStartX(q);
+		pole.setStartY(q);
+		pole.setEndX(q);
+		pole.setEndY(q * 3);
+		
+		Rectangle flag = new Rectangle();
+		flag.setFill(Color.RED);
+		flag.setX(q);
+		flag.setY(q);
+		flag.setWidth(10);
+		flag.setHeight(5);
+		
+		g.getChildren().addAll(pole, flag);
+		gridSquare.setGraphic(g);
+	}
+	
+	public void removeFlag(){
+		gridSquare.setGraphic(null);
 	}
 	
 	public int getColumn(){
