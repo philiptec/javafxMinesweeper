@@ -49,7 +49,10 @@
 	
 	<bean name="label" class="javafx.scene.control.Label" scope="prototype">
 		<property name="padding" ref="paddingInsets"/>
-		<property name="text" value="Timer: 00:00:00"/>
+	</bean>
+	
+	<bean name="timerLabel" parent="label" scope="singleton">
+			<property name="text" value="Timer: 00:00:00"/>
 	</bean>
 	
 	<bean name="infoPanel" class="javafx.scene.layout.HBox">

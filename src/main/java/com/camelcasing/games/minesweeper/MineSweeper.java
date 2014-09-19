@@ -6,21 +6,20 @@ import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import javafx.animation.*;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.*;
 import javafx.scene.layout.*;
-import javafx.util.Duration;
 
 public class MineSweeper extends Application{
 
 		public final static Logger logger = Logger.getLogger(MineSweeper.class.getName());
 		public final static  ApplicationContext beanFactory = new ClassPathXmlApplicationContext("springbeans.xml");
-		public static Timeline timer;
 	
+		private final TimerThread TIMER = new TimerThread();;
+		
 		private int boardWidth = 30;
 		private int boardHeight = 19;
 		private int totalNumberOfSquares;
@@ -34,7 +33,6 @@ public class MineSweeper extends Application{
 		private Label timerLabel;
 		private MenuBar topMenuBar;
 		private boolean timerRunning = false;
-		private Time time;
 		
 	@Override
 	public void start(Stage stage) throws Exception{
@@ -56,7 +54,7 @@ public class MineSweeper extends Application{
 		rootPane = (BorderPane)beanFactory.getBean("rootPane");
 		board = (GridPane)beanFactory.getBean("board");
 		remainingBombsLabel = (Label)beanFactory.getBean("label");
-		timerLabel = (Label)beanFactory.getBean("label");
+		timerLabel = (Label)beanFactory.getBean("timerLabel");
 		HBox hbox = (HBox)beanFactory.getBean("infoPanel");
 		hbox.getChildren().addAll(remainingBombsLabel, timerLabel);
 		boardAndInfo = (BorderPane)beanFactory.getBean("boardAndInfo");
@@ -79,7 +77,7 @@ public class MineSweeper extends Application{
 		MenuItem pause = new MenuItem("Pause");
 		pause.setOnAction(e -> {
 			timerRunning = false;
-			timer.pause();
+			TIMER.pause();
 		});
 		timerMenu.getItems().add(pause);
 		
@@ -144,7 +142,7 @@ public class MineSweeper extends Application{
 	private void startTimerIfNotRunning(){
 		if(!timerRunning){
 			timerRunning = true;
-			timer.play();
+			TIMER.startTimer();
 		}
 	}
 	
@@ -192,7 +190,7 @@ public class MineSweeper extends Application{
 	}
 	
 	private void pauseTimerAndDeactivateSquares(){
-		timer.pause();
+		TIMER.pause();
 		for(int i = 0; i < squares.length; i++){
 			for(int j = 0; j < squares[i].length; j++){
 				Button b = squares[i][j].getGridSquare();
@@ -258,12 +256,7 @@ public class MineSweeper extends Application{
 	}
 	
 	private void createTimer(){
-		time = new Time();
-		timer = new Timeline(new KeyFrame(Duration.millis(1000), e -> {
-			time.incrementSeconds();
-			timerLabel.setText("Timer: " + time);	
-		}));
-		timer.setCycleCount(Animation.INDEFINITE);
+		TIMER.run();
 	}
 	
 	public void reset(){
@@ -271,9 +264,9 @@ public class MineSweeper extends Application{
 		assignBombs();
 		assignNumbers();
 		timerRunning = false;
-		timer.pause();
+		TIMER.pause();
 		timerLabel.setText("Timer: 00:00:00");
-		time.reset();
+		TIMER.reset();
 		logger.debug("game reset");
 	}
 	

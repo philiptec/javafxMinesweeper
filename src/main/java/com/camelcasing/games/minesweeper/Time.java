@@ -27,6 +27,33 @@ public class Time {
 		hours = 0;
 	}
 	
+	public int compare(int compareToValue){
+		int thisTime = convertTimeToSeconds();
+		if(thisTime > compareToValue){
+			return 1;
+		}else if(thisTime == compareToValue){
+			return 0;
+		}else{
+			return -1;
+		}
+	}
+	
+	public int convertTimeToSeconds(){
+		return 3600 * hours + 60 * minutes + seconds;
+	}
+	
+	public int getHours(){
+		return hours;
+	}
+	
+	public int getMinutes(){
+		return minutes;
+	}
+	
+	public int getSeconds(){
+		return seconds;
+	}
+	
 	@Override
 	public String toString(){
 		return String.format("%02d:%02d:%02d", hours, minutes, seconds);
