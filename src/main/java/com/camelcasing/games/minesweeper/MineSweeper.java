@@ -70,8 +70,8 @@ public class MineSweeper extends Application{
 		MenuItem exitMenuItem = (MenuItem)beanFactory.getBean("exitMenuItem");
 		exitMenuItem.setOnAction(e -> System.exit(0));
 		
-		//resetMenuItem.setGraphic(new ImageView((Image)beanFactory.getBean("resetIcon")));
-		//exitMenuItem.setGraphic(new ImageView((Image)beanFactory.getBean("closeIcon")));
+		resetMenuItem.setGraphic(new ImageView((Image)beanFactory.getBean("resetIcon")));
+		exitMenuItem.setGraphic(new ImageView((Image)beanFactory.getBean("closeIcon")));
 		
 		Menu timerMenu = new Menu("Timer");
 		MenuItem pause = new MenuItem("Pause");

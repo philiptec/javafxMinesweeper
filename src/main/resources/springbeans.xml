@@ -22,13 +22,13 @@
 		<constructor-arg type="java.lang.String" value="Quit"/>
 	</bean>
 	
-<!-- 	<bean id="resetIcon" class="javafx.scene.image.Image"> -->
-<!-- 		<constructor-arg type="java.lang.String" value="black_reset.png"/> -->
-<!-- 	</bean> -->
+	<bean id="resetIcon" class="javafx.scene.image.Image">
+		<constructor-arg type="java.lang.String" value="black_reset.png"/>
+	</bean>
 	
-<!-- 		<bean id="closeIcon" class="javafx.scene.image.Image"> -->
-<!-- 		<constructor-arg type="java.lang.String" value="black_close.png"/> -->
-<!-- 	</bean> -->
+		<bean id="closeIcon" class="javafx.scene.image.Image">
+		<constructor-arg type="java.lang.String" value="black_close.png"/>
+	</bean>
 	
 	
 	<!-- GUI -->
