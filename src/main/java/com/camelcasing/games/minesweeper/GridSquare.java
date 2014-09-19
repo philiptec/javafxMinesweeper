@@ -16,9 +16,10 @@ public class GridSquare{
 		private int column = -1;
 		private boolean isMine = false;
 		private int nextToCount = 0;
-		private int size = 30;
-		private boolean revealed = false;
+		private boolean isRevealed = false;
 		private boolean isFlagged = false;
+		
+		private final int SIZE = 30;
 		
 	public GridSquare(int row, int column){
 		this.row = row;
@@ -31,8 +32,8 @@ public class GridSquare{
 				Color.BLACK, BorderStrokeStyle.DOTTED, new CornerRadii(5), BorderStroke.THIN))));
 		gridSquare.setOnMouseEntered(me -> gridSquare.setBorder(new Border(new BorderStroke(
 				Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(5), BorderStroke.MEDIUM))));
-		gridSquare.setMinSize(size, size);
-		gridSquare.setMaxSize(size, size);
+		gridSquare.setMinSize(SIZE, SIZE);
+		gridSquare.setMaxSize(SIZE, SIZE);
 	}
 	
 	public boolean isMine(){
@@ -65,11 +66,15 @@ public class GridSquare{
 	}
 	
 	public void reveal(){
-		revealed = true;
+		gridSquare.setGraphic(null);
+		isRevealed = true;
+		setFlagged(false);
+		gridSquare.setStyle("-fx-background-color: #f1f1f1");
+		gridSquare.setText(getNextToCount());
 	}
 	
 	public boolean isRevealed(){
-		return revealed;
+		return isRevealed;
 	}
 	
 	public boolean isFlagged(){
@@ -82,26 +87,44 @@ public class GridSquare{
 	
 	public void drawFlag(){
 		Group g = new Group();
-		Line pole = new Line();
-		int q = size / 5;
-		pole.setStartX(q);
-		pole.setStartY(q);
-		pole.setEndX(q);
-		pole.setEndY(q * 3);
-		
-		Rectangle flag = new Rectangle();
-		flag.setFill(Color.RED);
-		flag.setX(q);
-		flag.setY(q);
-		flag.setWidth(10);
-		flag.setHeight(5);
-		
-		g.getChildren().addAll(pole, flag);
+		Line pole = (Line)MineSweeper.beanFactory.getBean("pole");
+		Rectangle redFlag = (Rectangle)MineSweeper.beanFactory.getBean("redFlag");
+		g.getChildren().addAll(pole, redFlag);
 		gridSquare.setGraphic(g);
+	}
+	
+	public void drawExplosionGraphic(){
+		Group g = new Group();
+		Circle bc = new Circle(15.0, 15.0, 10);
+		Circle sc = new Circle(15.0, 15.0, 6);
+		Circle wc = new Circle(15.0, 15.0, 2.5);
+		bc.setFill(Color.RED);
+		sc.setFill(Color.YELLOW);
+		wc.setFill(Color.RED);
+		g.getChildren().addAll(bc, sc, wc);
+		gridSquare.setGraphic(g);
+	}
+	
+	public void showBomb(){
+		if(isMine && !isFlagged){
+			Group g = new Group();
+			Circle bombCircle = (Circle)MineSweeper.beanFactory.getBean("bombCircle");
+			Circle fuseCircle = (Circle)MineSweeper.beanFactory.getBean("fuseCircle");
+			Arc fuse = (Arc)MineSweeper.beanFactory.getBean("fuse");
+			g.getChildren().addAll(bombCircle, fuseCircle, fuse);
+			gridSquare.setGraphic(g);
+		}else if(isFlagged && !isMine){
+			Group g = new Group();
+			Line l1 = (Line)MineSweeper.beanFactory.getBean("forwardLine");
+			Line l2 = (Line)MineSweeper.beanFactory.getBean("backwardLine");
+			g.getChildren().addAll(l1, l2);
+			gridSquare.setGraphic(g);
+		}
 	}
 	
 	public void removeFlag(){
 		gridSquare.setGraphic(null);
+		isFlagged = false;
 	}
 	
 	public int getColumn(){
@@ -110,6 +133,7 @@ public class GridSquare{
 	
 	@Override
 	public String toString(){
-		return "index " + row + " X " + column + (isMine ? " is a mine" : " not a mine and next to " + nextToCount + " mines");
-	}
+		return "index " + row + " X " + column + (isMine ? " is a mine," : " not a mine and next to " + nextToCount + " mines,")
+				+ (isRevealed ? " is revealed," : " is not revealed,") + " and" + (isFlagged ? " is flagged" : " is not flagged");
+	} 
 }

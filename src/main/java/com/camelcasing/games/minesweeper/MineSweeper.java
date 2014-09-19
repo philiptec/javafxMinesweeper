@@ -1,6 +1,6 @@
 package com.camelcasing.games.minesweeper;
 
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
@@ -11,6 +11,7 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
 
@@ -20,15 +21,14 @@ public class MineSweeper extends Application{
 		public final static  ApplicationContext beanFactory = new ClassPathXmlApplicationContext("springbeans.xml");
 		public static Timeline timer;
 	
-		private int boardWidth = 16;
-		private int boardHeight = 16;
+		private int boardWidth = 30;
+		private int boardHeight = 19;
 		private int totalNumberOfSquares;
 		private int totalNumberOfMines;
 		private GridSquare[][] squares;
 		private GridPane board;
 		private BorderPane rootPane;
 		private BorderPane boardAndInfo;
-		private Random rnd = new Random();
 		private int remainingBombs; 
 		private Label remainingBombsLabel;
 		private Label timerLabel;
@@ -38,7 +38,6 @@ public class MineSweeper extends Application{
 		
 	@Override
 	public void start(Stage stage) throws Exception{
-		
 		createGUI();
 		createMenuItems();
 		createGrid();
@@ -54,12 +53,10 @@ public class MineSweeper extends Application{
 	}
 	
 	private void createGUI(){
-		
 		rootPane = (BorderPane)beanFactory.getBean("rootPane");
 		board = (GridPane)beanFactory.getBean("board");
 		remainingBombsLabel = (Label)beanFactory.getBean("label");
 		timerLabel = (Label)beanFactory.getBean("label");
-		timerLabel.setText("Timer: 00:00:00");
 		HBox hbox = (HBox)beanFactory.getBean("infoPanel");
 		hbox.getChildren().addAll(remainingBombsLabel, timerLabel);
 		boardAndInfo = (BorderPane)beanFactory.getBean("boardAndInfo");
@@ -75,8 +72,11 @@ public class MineSweeper extends Application{
 		MenuItem exitMenuItem = (MenuItem)beanFactory.getBean("exitMenuItem");
 		exitMenuItem.setOnAction(e -> System.exit(0));
 		
+		//resetMenuItem.setGraphic(new ImageView((Image)beanFactory.getBean("resetIcon")));
+		//exitMenuItem.setGraphic(new ImageView((Image)beanFactory.getBean("closeIcon")));
+		
 		Menu timerMenu = new Menu("Timer");
-		MenuItem pause = new MenuItem("pause");
+		MenuItem pause = new MenuItem("Pause");
 		pause.setOnAction(e -> {
 			timerRunning = false;
 			timer.pause();
@@ -92,7 +92,7 @@ public class MineSweeper extends Application{
 		squares = new GridSquare[boardWidth][boardHeight];
 		for(int i = 0; i < squares.length; i++){
 			for(int j = 0; j < squares[i].length; j++){
-				GridSquare gs = createGridSquare(i, j);
+				GridSquare gs = new GridSquare(i, j);
 				squares[i][j] = gs;
 				
 				gs.getGridSquare().setOnAction(ae -> {
@@ -109,17 +109,35 @@ public class MineSweeper extends Application{
 							gs.drawFlag();
 							remainingBombs--;
 							remainingBombsLabel.setText("Bombs remaining = " + remainingBombs);
+							checkWon();
 						}else if(gs.isFlagged()){
 							gs.removeFlag();
 							gs.setFlagged(false);
 							remainingBombs++;
 							remainingBombsLabel.setText("Bombs remaining = " + remainingBombs);
+							checkWon();
 						}
 						startTimerIfNotRunning();
 					}
 				});
 				board.add(squares[i][j].getGridSquare(), i, j);
 			}
+		}
+	}
+	
+	private void checkWon(){
+		if(remainingBombs == 0){
+			logger.debug("checked if won");
+			for(int i = 0; i < squares.length; i++){
+				for(int j = 0; j < squares[i].length; j++){
+					GridSquare gs = squares[i][j];
+					if((!gs.isRevealed() && gs.isMine() && !gs.isFlagged())){
+						return;
+					}
+				}
+			}
+			pauseTimerAndDeactivateSquares();
+			remainingBombsLabel.setText("YOU WIN!");
 		}
 	}
 	
@@ -130,21 +148,15 @@ public class MineSweeper extends Application{
 		}
 	}
 	
-	private GridSquare createGridSquare(int row, int column){
-		GridSquare gridSquare = new GridSquare(row, column);
-
-		return gridSquare;
-	}
-	
 	private void checkSquare(GridSquare gridSquare){
-		if(gridSquare.getGridSquare().getText().equals("F")) return;
-		if(gridSquare.isMine()) gameOver();
+		if(gridSquare.isMine()){
+			gameOver(gridSquare);
+			return;
+		}
 		String s = gridSquare.getNextToCount();
 			if(s.equals("0")){
 				checkSurrounding(gridSquare);
 			}
-		gridSquare.getGridSquare().setStyle("-fx-background-color: #f1f1f1");
-		gridSquare.getGridSquare().setText(s);
 		gridSquare.reveal();
 	}
 	
@@ -164,7 +176,6 @@ public class MineSweeper extends Application{
 	}
 	
 	private void revealAndCheck(GridSquare gs, String s){
-		if(s.equals("F")) return; 
 		gs.getGridSquare().setStyle("-fx-background-color: #f1f1f1");
 		gs.getGridSquare().setText(gs.getNextToCount());
 		gs.reveal();
@@ -173,22 +184,23 @@ public class MineSweeper extends Application{
 		}
 	}
 	
-	private void gameOver(){
+	private void gameOver(GridSquare gs){
 		logger.debug("GameOver");
-		timer.pause();
-			for(int i = 0; i < squares.length; i++){
-				for(int j = 0; j < squares[i].length; j++){
-					Button b = squares[i][j].getGridSquare();
-					b.setOnAction(e -> {});
-					b.setOnMouseClicked(e -> {});
-				}
-			}
+		pauseTimerAndDeactivateSquares();
+		gs.drawExplosionGraphic();
 		remainingBombsLabel.setText("BOOM!");
-		showBombs();
 	}
 	
-	private void showBombs(){
-		
+	private void pauseTimerAndDeactivateSquares(){
+		timer.pause();
+		for(int i = 0; i < squares.length; i++){
+			for(int j = 0; j < squares[i].length; j++){
+				Button b = squares[i][j].getGridSquare();
+				b.setOnAction(e -> {});
+				b.setOnMouseClicked(e -> {});
+				squares[i][j].showBomb();
+			}
+		}
 	}
 	
 	private void assignBombs(){
@@ -204,8 +216,8 @@ public class MineSweeper extends Application{
 			}
 		for(int i = 0; i < totalNumberOfMines; i++){
 				do{
-					w = rnd.nextInt(boardWidth);
-					h = rnd.nextInt(boardHeight);
+					w = ThreadLocalRandom.current().nextInt(boardWidth);
+					h = ThreadLocalRandom.current().nextInt(boardHeight);
 				}while(squares[w][h].isMine());
 			squares[w][h].setMine(true);
 		}
