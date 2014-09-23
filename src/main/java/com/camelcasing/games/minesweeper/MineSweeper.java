@@ -204,8 +204,7 @@ public class MineSweeper extends Application{
 	private void assignBombs(){
 		logger.debug("bombAssignment started");
 		totalNumberOfSquares = boardWidth * boardHeight;
-		//totalNumberOfMines = totalNumberOfSquares / 5;
-		totalNumberOfMines = 5;
+		totalNumberOfMines = totalNumberOfSquares / 5;
 		remainingBombs = totalNumberOfMines;
 		remainingBombsLabel.setText("Bombs remaining = " + remainingBombs);
 		int w = -1;
