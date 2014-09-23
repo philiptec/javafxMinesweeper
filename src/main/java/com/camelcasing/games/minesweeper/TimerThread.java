@@ -7,7 +7,7 @@ import javafx.util.Duration;
 public class TimerThread extends Thread {
 
 		private Time time;
-		private Label timerLabel = (Label) MineSweeper.beanFactory.getBean("timerLabel");
+		private Label timerLabel = (Label)MineSweeper.beanFactory.getBean("timerLabel");
 		private Timeline timer;
 		
 	@Override

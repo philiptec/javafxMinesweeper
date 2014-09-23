@@ -2,9 +2,7 @@ package com.camelcasing.games.minesweeper;
 
 public class Time {
 
-		private int seconds = 0;
-		private int minutes = 0;
-		private int hours = 0;
+		private int seconds, minutes, hours;
 	
 	public void incrementSeconds(){
 		if(seconds == 59){

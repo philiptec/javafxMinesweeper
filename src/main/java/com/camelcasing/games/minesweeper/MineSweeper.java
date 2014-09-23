@@ -33,7 +33,7 @@ public class MineSweeper extends Application{
 		private Label timerLabel;
 		private MenuBar topMenuBar;
 		private boolean timerRunning = false;
-		
+
 	@Override
 	public void start(Stage stage) throws Exception{
 		createGUI();
@@ -96,6 +96,7 @@ public class MineSweeper extends Application{
 				gs.getGridSquare().setOnAction(ae -> {
 					startTimerIfNotRunning();
 					if(!gs.isFlagged())checkSquare(gs);
+					checkWon();
 				});
 				
 				gs.getGridSquare().setOnMouseClicked(me -> {
@@ -107,15 +108,14 @@ public class MineSweeper extends Application{
 							gs.drawFlag();
 							remainingBombs--;
 							remainingBombsLabel.setText("Bombs remaining = " + remainingBombs);
-							checkWon();
 						}else if(gs.isFlagged()){
 							gs.removeFlag();
 							gs.setFlagged(false);
 							remainingBombs++;
 							remainingBombsLabel.setText("Bombs remaining = " + remainingBombs);
-							checkWon();
 						}
 						startTimerIfNotRunning();
+						checkWon();
 					}
 				});
 				board.add(squares[i][j].getGridSquare(), i, j);
@@ -129,7 +129,7 @@ public class MineSweeper extends Application{
 			for(int i = 0; i < squares.length; i++){
 				for(int j = 0; j < squares[i].length; j++){
 					GridSquare gs = squares[i][j];
-					if((!gs.isRevealed() && gs.isMine() && !gs.isFlagged())){
+					if((!gs.isRevealed() && !gs.isFlagged())){
 						return;
 					}
 				}
@@ -204,7 +204,8 @@ public class MineSweeper extends Application{
 	private void assignBombs(){
 		logger.debug("bombAssignment started");
 		totalNumberOfSquares = boardWidth * boardHeight;
-		totalNumberOfMines = totalNumberOfSquares / 5;
+		//totalNumberOfMines = totalNumberOfSquares / 5;
+		totalNumberOfMines = 5;
 		remainingBombs = totalNumberOfMines;
 		remainingBombsLabel.setText("Bombs remaining = " + remainingBombs);
 		int w = -1;
