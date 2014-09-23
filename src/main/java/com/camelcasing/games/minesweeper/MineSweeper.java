@@ -12,6 +12,7 @@ import javafx.geometry.Pos;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.*;
 
 public class MineSweeper extends Application{
@@ -66,8 +67,11 @@ public class MineSweeper extends Application{
 		Menu gameMenu = (Menu)beanFactory.getBean("gameMenu");
 		MenuItem resetMenuItem = (MenuItem)beanFactory.getBean("resetMenuItem");
 		resetMenuItem.setOnAction(e -> reset());
+		resetMenuItem.setAccelerator(KeyCombination.valueOf("Enter"));
+		
 		MenuItem exitMenuItem = (MenuItem)beanFactory.getBean("exitMenuItem");
 		exitMenuItem.setOnAction(e -> System.exit(0));
+		exitMenuItem.setAccelerator(KeyCombination.valueOf("q"));
 		
 		Menu timerMenu = new Menu("Timer");
 		MenuItem pause = new MenuItem("Pause");
@@ -75,6 +79,7 @@ public class MineSweeper extends Application{
 			timerRunning = false;
 			TIMER.pause();
 		});
+		pause.setAccelerator(KeyCombination.valueOf("p"));
 		timerMenu.getItems().add(pause);
 		
 		Menu boardSize = new Menu("Board Size");
