@@ -7,10 +7,11 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.*;
 import javafx.scene.layout.*;
 
 public class MineSweeper extends Application{
@@ -31,8 +32,8 @@ public class MineSweeper extends Application{
 		private int remainingBombs; 
 		private Label remainingBombsLabel;
 		private Label timerLabel;
-		private MenuBar topMenuBar;
 		private boolean timerRunning = false;
+		private HBox timerAndBombCount;
 
 	@Override
 	public void start(Stage stage) throws Exception{
@@ -52,26 +53,21 @@ public class MineSweeper extends Application{
 	
 	private void createGUI(){
 		rootPane = (BorderPane)beanFactory.getBean("rootPane");
-		board = (GridPane)beanFactory.getBean("board");
+		boardAndInfo = (BorderPane)beanFactory.getBean("boardAndInfo");
+		createBoard();
 		remainingBombsLabel = (Label)beanFactory.getBean("label");
 		timerLabel = (Label)beanFactory.getBean("timerLabel");
-		HBox hbox = (HBox)beanFactory.getBean("infoPanel");
-		hbox.getChildren().addAll(remainingBombsLabel, timerLabel);
-		boardAndInfo = (BorderPane)beanFactory.getBean("boardAndInfo");
-		rootPane.setCenter(boardAndInfo);
+		timerAndBombCount = (HBox)beanFactory.getBean("infoPanel");
+		timerAndBombCount.getChildren().addAll(remainingBombsLabel, timerLabel);
 	}
 	
 	private void createMenuItems(){
-		topMenuBar = (MenuBar)beanFactory.getBean("topMenuBar");
 		
 		Menu gameMenu = (Menu)beanFactory.getBean("gameMenu");
 		MenuItem resetMenuItem = (MenuItem)beanFactory.getBean("resetMenuItem");
 		resetMenuItem.setOnAction(e -> reset());
 		MenuItem exitMenuItem = (MenuItem)beanFactory.getBean("exitMenuItem");
 		exitMenuItem.setOnAction(e -> System.exit(0));
-		
-		resetMenuItem.setGraphic(new ImageView((Image)beanFactory.getBean("resetIcon")));
-		exitMenuItem.setGraphic(new ImageView((Image)beanFactory.getBean("closeIcon")));
 		
 		Menu timerMenu = new Menu("Timer");
 		MenuItem pause = new MenuItem("Pause");
@@ -81,9 +77,31 @@ public class MineSweeper extends Application{
 		});
 		timerMenu.getItems().add(pause);
 		
+		Menu boardSize = new Menu("Board Size");
+		MenuItem small = new MenuItem("Small");
+		MenuItem medium = new MenuItem("Medium");
+		MenuItem large = new MenuItem("Large");
+		
+		small.setOnAction(e -> {
+			boardWidth = 10;
+			boardHeight = 10;
+			reset();
+		});
+		medium.setOnAction(e -> {
+			boardWidth = 20;
+			boardHeight = 11;
+			reset();
+		});
+		large.setOnAction(e -> {
+			boardWidth = 30;
+			boardHeight = 19;
+			reset();
+		});
+		
+		boardSize.getItems().addAll(small, medium, large);
+		
 		gameMenu.getItems().addAll(resetMenuItem, exitMenuItem);
-		topMenuBar.getMenus().addAll(gameMenu, timerMenu);
-		rootPane.setTop(topMenuBar);
+		((MenuBar)beanFactory.getBean("topMenuBar")).getMenus().addAll(gameMenu, boardSize, timerMenu);
 	}
 	
 	private void createGrid(){
@@ -259,7 +277,16 @@ public class MineSweeper extends Application{
 		TIMER.run();
 	}
 	
+	private void createBoard(){
+		board = new GridPane();
+		board.setPadding(new Insets(10, 30, 30, 30));
+		board.setAlignment(Pos.CENTER);
+		boardAndInfo.setCenter(board);
+		rootPane.setCenter(boardAndInfo);
+	}
+	
 	public void reset(){
+		createBoard();
 		createGrid();
 		assignBombs();
 		assignNumbers();

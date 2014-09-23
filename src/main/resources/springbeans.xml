@@ -22,28 +22,15 @@
 		<constructor-arg type="java.lang.String" value="Quit"/>
 	</bean>
 	
-	<bean id="resetIcon" class="javafx.scene.image.Image">
-		<constructor-arg type="java.lang.String" value="black_reset.png"/>
-	</bean>
-	
-		<bean id="closeIcon" class="javafx.scene.image.Image">
-		<constructor-arg type="java.lang.String" value="black_close.png"/>
-	</bean>
-	
 	
 	<!-- GUI -->
 	
 	<bean id="rootPane" class="javafx.scene.layout.BorderPane">
 		<property name="top" ref="topMenuBar"/>
-	</bean>
-	
-	<bean id="board" class="javafx.scene.layout.GridPane">
-		<property name="padding" ref="boardPadding"/>
-		<property name="alignment" ref="centrePosition"/>
+		<property name="center" ref="boardAndInfo"/>
 	</bean>
 	
 	<bean id="boardAndInfo" class="javafx.scene.layout.BorderPane">
-		<property name="center" ref="board"/>
 		<property name="top" ref="infoPanel"/>
 	</bean>
 	
@@ -147,12 +134,5 @@
 		<constructor-arg index="1" type="double" value="0"/>
 		<constructor-arg index="2" type="double" value="0"/>
 		<constructor-arg index="3" type="double" value="0"/>
-	</bean>
-	
-		<bean id="boardPadding" class="javafx.geometry.Insets">
-		<constructor-arg index="0" type="double" value="10"/>
-		<constructor-arg index="1" type="double" value="30"/>
-		<constructor-arg index="2" type="double" value="30"/>
-		<constructor-arg index="3" type="double" value="30"/>
 	</bean>
 </beans>
