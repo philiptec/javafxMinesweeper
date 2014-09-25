@@ -31,4 +31,8 @@ public class TimerThread extends Thread {
 	public void reset(){
 		time.reset();
 	}
+	
+	public int getTime(){
+		return time.convertTimeToSeconds();
+	}
 }

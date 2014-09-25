@@ -20,10 +20,11 @@ public class MineSweeper extends Application{
 		public final static Logger logger = Logger.getLogger(MineSweeper.class.getName());
 		public final static  ApplicationContext beanFactory = new ClassPathXmlApplicationContext("springbeans.xml");
 	
-		private final TimerThread TIMER = new TimerThread();;
+		private TimerThread TIMER = new TimerThread();;
 		
-		private int boardWidth = 30;
-		private int boardHeight = 19;
+		private int boardWidth;
+		private int boardHeight;
+		private String gameBoardSize = "Large";
 		private int totalNumberOfSquares;
 		private int totalNumberOfMines;
 		private GridSquare[][] squares;
@@ -35,9 +36,14 @@ public class MineSweeper extends Application{
 		private Label timerLabel;
 		private boolean timerRunning = false;
 		private HBox timerAndBombCount;
+		private Stage stage;
+		private Scene root;
+		private Leaderboard leaderboard;
 
 	@Override
 	public void start(Stage stage) throws Exception{
+		this.stage = stage;
+		leaderboard = new Leaderboard();
 		createGUI();
 		createMenuItems();
 		createGrid();
@@ -45,7 +51,7 @@ public class MineSweeper extends Application{
 		assignNumbers();
 		createTimer();
 		
-		Scene root = new Scene(rootPane);
+		root = new Scene(rootPane);
 		root.getStylesheets().add("stylesheet.css");
 		stage.setScene(root);
 		stage.setTitle("Mine Sweeper");
@@ -53,6 +59,7 @@ public class MineSweeper extends Application{
 	}
 	
 	private void createGUI(){
+		setBoardSize();
 		rootPane = (BorderPane)beanFactory.getBean("rootPane");
 		boardAndInfo = (BorderPane)beanFactory.getBean("boardAndInfo");
 		createBoard();
@@ -73,6 +80,12 @@ public class MineSweeper extends Application{
 		exitMenuItem.setOnAction(e -> System.exit(0));
 		exitMenuItem.setAccelerator(KeyCombination.valueOf("q"));
 		
+		MenuItem leaderBoard = new MenuItem("Leaderboard");
+		leaderBoard.setOnAction(e -> {
+			
+		});
+		
+		
 		Menu timerMenu = new Menu("Timer");
 		MenuItem pause = new MenuItem("Pause");
 		pause.setOnAction(e -> {
@@ -88,25 +101,42 @@ public class MineSweeper extends Application{
 		MenuItem large = new MenuItem("Large");
 		
 		small.setOnAction(e -> {
-			boardWidth = 10;
-			boardHeight = 10;
+			gameBoardSize = "Small";
+			setBoardSize();
 			reset();
 		});
 		medium.setOnAction(e -> {
-			boardWidth = 20;
-			boardHeight = 11;
+			gameBoardSize = "Medium";
+			setBoardSize();
 			reset();
 		});
 		large.setOnAction(e -> {
-			boardWidth = 30;
-			boardHeight = 19;
+			gameBoardSize = "Large";
+			setBoardSize();
 			reset();
 		});
 		
 		boardSize.getItems().addAll(small, medium, large);
 		
-		gameMenu.getItems().addAll(resetMenuItem, exitMenuItem);
+		gameMenu.getItems().addAll(resetMenuItem, leaderBoard, exitMenuItem);
 		((MenuBar)beanFactory.getBean("topMenuBar")).getMenus().addAll(gameMenu, boardSize, timerMenu);
+	}
+	
+	private void setBoardSize(){
+		switch(gameBoardSize){
+		case "Large":
+			boardWidth = 30;
+			boardHeight = 19;
+			break;
+		case "Medium":
+			boardWidth = 20;
+			boardHeight = 11;
+			break;
+		case "Small":
+			boardWidth = 10;
+			boardHeight = 10;
+			break;
+		}
 	}
 	
 	private void createGrid(){
@@ -159,6 +189,19 @@ public class MineSweeper extends Application{
 			}
 			pauseTimerAndDeactivateSquares();
 			remainingBombsLabel.setText("YOU WIN!");
+			int time = TIMER.getTime();
+			
+			switch(gameBoardSize){
+			case "Large":
+				leaderboard.setLargeBest(time);
+				break;
+			case "Medium":
+				leaderboard.setMediumBest(time);
+				break;
+			case "Small":
+				leaderboard.setSmallBest(time);
+				break;
+			}
 		}
 	}
 	
@@ -299,6 +342,7 @@ public class MineSweeper extends Application{
 		TIMER.pause();
 		timerLabel.setText("Timer: 00:00:00");
 		TIMER.reset();
+		stage.setScene(root);
 		logger.debug("game reset");
 	}
 	
