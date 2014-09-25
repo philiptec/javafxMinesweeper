@@ -82,7 +82,7 @@ public class MineSweeper extends Application{
 		
 		MenuItem leaderBoard = new MenuItem("Leaderboard");
 		leaderBoard.setOnAction(e -> {
-			
+			leaderboard.displayLeaderboard();
 		});
 		
 		
@@ -193,13 +193,19 @@ public class MineSweeper extends Application{
 			
 			switch(gameBoardSize){
 			case "Large":
-				leaderboard.setLargeBest(time);
+				if(leaderboard.setLargeBest(time)){
+					remainingBombsLabel.setText("New Personal Best!");
+				}
 				break;
 			case "Medium":
-				leaderboard.setMediumBest(time);
+				if(leaderboard.setMediumBest(time)){
+					remainingBombsLabel.setText("New Personal Best!");
+				}
 				break;
 			case "Small":
-				leaderboard.setSmallBest(time);
+				if(leaderboard.setSmallBest(time)){
+					remainingBombsLabel.setText("New Personal Best!");
+				}
 				break;
 			}
 		}
@@ -270,7 +276,7 @@ public class MineSweeper extends Application{
 	private void assignBombs(){
 		logger.debug("bombAssignment started");
 		totalNumberOfSquares = boardWidth * boardHeight;
-		totalNumberOfMines = totalNumberOfSquares / 5;
+		totalNumberOfMines = totalNumberOfSquares / 6;
 		remainingBombs = totalNumberOfMines;
 		remainingBombsLabel.setText("Bombs remaining = " + remainingBombs);
 		int w = -1;
