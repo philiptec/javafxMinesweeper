@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.camelcasing.games.minesweeper</groupId>
   <artifactId>MineSweeper</artifactId>
-  <version>0.8.1</version>
+  <version>1.0</version>
   <packaging>jar</packaging>
   <name>MineSweeper</name>
   <url>http://maven.apache.org</url>

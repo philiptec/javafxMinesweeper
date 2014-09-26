@@ -84,6 +84,7 @@ public class MineSweeper extends Application{
 		leaderBoard.setOnAction(e -> {
 			leaderboard.displayLeaderboard();
 		});
+		leaderBoard.setAccelerator(KeyCombination.valueOf("l"));
 		
 		
 		Menu timerMenu = new Menu("Timer");
@@ -96,9 +97,9 @@ public class MineSweeper extends Application{
 		timerMenu.getItems().add(pause);
 		
 		Menu boardSize = new Menu("Board Size");
-		MenuItem small = new MenuItem("Small");
-		MenuItem medium = new MenuItem("Medium");
-		MenuItem large = new MenuItem("Large");
+		MenuItem small = new MenuItem("Very Small");
+		MenuItem medium = new MenuItem("Small");
+		MenuItem large = new MenuItem("Normal");
 		
 		small.setOnAction(e -> {
 			gameBoardSize = "Small";
@@ -348,7 +349,9 @@ public class MineSweeper extends Application{
 		TIMER.pause();
 		timerLabel.setText("Timer: 00:00:00");
 		TIMER.reset();
-		stage.setScene(root);
+		stage.setWidth(boardWidth * 30 + 60);
+		stage.setHeight(boardHeight * 30 + 120);
+		//stage.setScene(root);
 		logger.debug("game reset");
 	}
 	

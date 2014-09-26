@@ -31,9 +31,9 @@ public class Leaderboard{
 				"MediumBest = " + convertSeconds(mediumBest) + "\n" +
 				"SmallBest = " + convertSeconds(smallBest));
 		
-		Text text = new Text("Large Board \t " + convertSeconds(largeBest) + "\n\n" + 
-				"Medium Board \t " + convertSeconds(mediumBest) + "\n\n" +
-				"Small Board \t " + convertSeconds(smallBest));
+		Text text = new Text("Normal Board \t\t " + convertSeconds(largeBest) + "\n\n" + 
+				"Small Board \t\t " + convertSeconds(mediumBest) + "\n\n" +
+				"Very Small Board \t " + convertSeconds(smallBest));
 		text.setFont(new Font("Ubuntu", 24));
 		
 		HBox root = new HBox();
