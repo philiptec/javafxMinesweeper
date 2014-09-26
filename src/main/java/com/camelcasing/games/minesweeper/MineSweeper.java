@@ -36,9 +36,9 @@ public class MineSweeper extends Application{
 		private Label timerLabel;
 		private boolean timerRunning = false;
 		private HBox timerAndBombCount;
-		private Stage stage;
-		private Scene root;
 		private Leaderboard leaderboard;
+		private Stage stage;
+		private MenuItem small, medium, large;
 
 	@Override
 	public void start(Stage stage) throws Exception{
@@ -51,7 +51,7 @@ public class MineSweeper extends Application{
 		assignNumbers();
 		createTimer();
 		
-		root = new Scene(rootPane);
+		Scene root = new Scene(rootPane);
 		root.getStylesheets().add("stylesheet.css");
 		stage.setScene(root);
 		stage.setTitle("Mine Sweeper");
@@ -97,23 +97,27 @@ public class MineSweeper extends Application{
 		timerMenu.getItems().add(pause);
 		
 		Menu boardSize = new Menu("Board Size");
-		MenuItem small = new MenuItem("Very Small");
-		MenuItem medium = new MenuItem("Small");
-		MenuItem large = new MenuItem("Normal");
+		small = new MenuItem();
+		medium = new MenuItem();
+		large = new MenuItem();
+		setBoardSizeMenuText();
 		
 		small.setOnAction(e -> {
 			gameBoardSize = "Small";
 			setBoardSize();
+			setBoardSizeMenuText();
 			reset();
 		});
 		medium.setOnAction(e -> {
 			gameBoardSize = "Medium";
 			setBoardSize();
+			setBoardSizeMenuText();
 			reset();
 		});
 		large.setOnAction(e -> {
 			gameBoardSize = "Large";
 			setBoardSize();
+			setBoardSizeMenuText();
 			reset();
 		});
 		
@@ -121,6 +125,12 @@ public class MineSweeper extends Application{
 		
 		gameMenu.getItems().addAll(resetMenuItem, leaderBoard, exitMenuItem);
 		((MenuBar)beanFactory.getBean("topMenuBar")).getMenus().addAll(gameMenu, boardSize, timerMenu);
+	}
+	
+	private void setBoardSizeMenuText(){
+		large.setText(gameBoardSize.equals("Large") ? "\u00B7 Normal" : "  Normal");
+		medium.setText(gameBoardSize.equals("Medium") ? "\u00B7 Small" : "  Small");
+		small.setText(gameBoardSize.equals("Small") ? "\u00B7 Very Small" : "  Very Small");
 	}
 	
 	private void setBoardSize(){
@@ -351,7 +361,6 @@ public class MineSweeper extends Application{
 		TIMER.reset();
 		stage.setWidth(boardWidth * 30 + 60);
 		stage.setHeight(boardHeight * 30 + 120);
-		//stage.setScene(root);
 		logger.debug("game reset");
 	}
 	
