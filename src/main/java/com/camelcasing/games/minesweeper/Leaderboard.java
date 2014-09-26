@@ -11,19 +11,28 @@ import javafx.scene.Scene;
 
 public class Leaderboard{
 
-		public final Preferences prefs = Preferences.userNodeForPackage(getClass());
+		public Preferences prefs;
 	
 		private int largeBest;
 		private int mediumBest;
 		private int smallBest;
 		
 	public Leaderboard(){
+		prefsInit();
 		Thread t = new Thread(() -> {
 			largeBest = prefs.getInt("Large", 1000000000);
 			mediumBest = prefs.getInt("Medium", 1000000000);
 			smallBest = prefs.getInt("Small", 1000000000);
 		});
 		t.start();
+	}
+	
+	private void prefsInit(){
+		if(System.getProperty("os.name").equals("Linux")){
+			prefs = Preferences.userNodeForPackage(getClass());
+		}else{
+			prefs = Preferences.userRoot().node(MineSweeper.class.getName());
+		}	
 	}
 
 	public void displayLeaderboard(){
