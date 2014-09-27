@@ -165,9 +165,7 @@ public class MineSweeper extends Application{
 				
 				gs.getGridSquare().setOnMouseClicked(me -> {
 					if(me.getButton() == javafx.scene.input.MouseButton.SECONDARY){
-						Button b = (Button) me.getSource();
 						if(!gs.isFlagged() && !gs.isRevealed()){
-							b.setStyle("-fx-text-fill: #ff0000");
 							gs.setFlagged(true);
 							gs.drawFlag();
 							remainingBombs--;
@@ -199,8 +197,8 @@ public class MineSweeper extends Application{
 				}
 			}
 			pauseTimerAndDeactivateSquares();
-			remainingBombsLabel.setText("YOU WIN!");
 			int time = TIMER.getTime();
+			remainingBombsLabel.setText("YOU WIN!");
 			
 			switch(gameBoardSize){
 			case "Large":
@@ -356,7 +354,6 @@ public class MineSweeper extends Application{
 		assignBombs();
 		assignNumbers();
 		timerRunning = false;
-		TIMER.pause();
 		timerLabel.setText("Timer: 00:00:00");
 		TIMER.reset();
 		stage.setWidth(boardWidth * 30 + 60);

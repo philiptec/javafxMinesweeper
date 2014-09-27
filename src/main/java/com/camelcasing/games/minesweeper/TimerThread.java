@@ -29,6 +29,7 @@ public class TimerThread extends Thread {
 	}
 	
 	public void reset(){
+		pause();
 		time.reset();
 	}
 	
