@@ -43,7 +43,7 @@
 	</bean>
 	
 	<bean name="infoPanel" class="javafx.scene.layout.HBox">
-		<property name="spacing" value="50"/>
+		<property name="spacing" value="20"/>
 		<property name="alignment" ref="centrePosition"/>
 	</bean>
 
