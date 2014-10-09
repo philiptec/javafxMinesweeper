@@ -65,7 +65,7 @@
 		<property name="fill" ref="red"/>
 	</bean>
 	
-	<bean name="red" class="javafx.scene.paint.Color" factory-method="valueOf">
+	<bean name="red" class="javafx.scene.paint.Color" factory-method="valueOf" lazy-init="true">
 		<constructor-arg type="java.lang.String" value="RED"/>
 	</bean>
 	
@@ -99,7 +99,7 @@
 		</property>
 	</bean>
 	
-	<bean name="yellow" class="javafx.scene.paint.Color" factory-method="valueOf">
+	<bean name="yellow" class="javafx.scene.paint.Color" factory-method="valueOf" lazy-init="true">
 		<constructor-arg type="java.lang.String" value="YELLOW"/>
 	</bean>
 	
@@ -125,11 +125,11 @@
 	
 	<!-- position classes -->
 	
-	<bean id="centrePosition" class="javafx.geometry.Pos" factory-method="valueOf">
+	<bean id="centrePosition" class="javafx.geometry.Pos" factory-method="valueOf" lazy-init="true">
 		<constructor-arg type="java.lang.String" value="CENTER"/>
 	</bean>
 	
-	<bean id="paddingInsets" class="javafx.geometry.Insets">
+	<bean id="paddingInsets" class="javafx.geometry.Insets" lazy-init="true">
 		<constructor-arg index="0" type="double" value="10"/>
 		<constructor-arg index="1" type="double" value="0"/>
 		<constructor-arg index="2" type="double" value="0"/>

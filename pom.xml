@@ -9,6 +9,7 @@
   <url>http://maven.apache.org</url>
   <properties>
     <project.build.sourceEncodeing>UTF-8</project.build.sourceEncodeing>
+	<spring.version>4.0.6.RELEASE</spring.version>
   </properties>
   <dependencies>
     <dependency>
@@ -25,12 +26,12 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-core</artifactId>
-      <version>4.0.6.RELEASE</version>
+      <version>${spring.version}</version>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
-      <version>4.0.6.RELEASE</version>
+      <version>${spring.version}</version>
     </dependency>
   </dependencies>
   <build>

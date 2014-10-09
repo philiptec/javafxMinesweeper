@@ -128,9 +128,9 @@ public class MineSweeper extends Application{
 	}
 	
 	private void setBoardSizeMenuText(){
-		large.setText(gameBoardSize.equals("Large") ? "\u00B7 Normal" : "  Normal");
-		medium.setText(gameBoardSize.equals("Medium") ? "\u00B7 Small" : "  Small");
-		small.setText(gameBoardSize.equals("Small") ? "\u00B7 Very Small" : "  Very Small");
+		large.setText(gameBoardSize.equals("Large") ? "\u00D7 Normal" : "  Normal");
+		medium.setText(gameBoardSize.equals("Medium") ? "\u00D7 Small" : "  Small");
+		small.setText(gameBoardSize.equals("Small") ? "\u00D7 Very Small" : "  Very Small");
 	}
 	
 	private void setBoardSize(){
