@@ -2,8 +2,8 @@ package com.camelcasing.games.minesweeper;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-import org.apache.logging.Logger;
-import org.apache.logging.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
