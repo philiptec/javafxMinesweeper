@@ -2,7 +2,9 @@ package com.camelcasing.games.minesweeper;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.Logger;
+import org.apache.logging.LogManager;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -10,14 +12,14 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.*;
 
 public class MineSweeper extends Application{
 
-		public final static Logger logger = Logger.getLogger(MineSweeper.class.getName());
+		public final static Logger logger = LogManager.getLogger(MineSweeper.class.getName());
 		public final static  ApplicationContext beanFactory = new ClassPathXmlApplicationContext("springbeans.xml");
 	
 		private TimerThread TIMER = new TimerThread();;
@@ -50,7 +52,6 @@ public class MineSweeper extends Application{
 		assignBombs();
 		assignNumbers();
 		createTimer();
-		
 		Scene root = new Scene(rootPane);
 		root.getStylesheets().add("stylesheet.css");
 		stage.setScene(root);
@@ -74,26 +75,23 @@ public class MineSweeper extends Application{
 		Menu gameMenu = (Menu)beanFactory.getBean("gameMenu");
 		MenuItem resetMenuItem = (MenuItem)beanFactory.getBean("resetMenuItem");
 		resetMenuItem.setOnAction(e -> reset());
-		resetMenuItem.setAccelerator(KeyCombination.valueOf("Enter"));
 		
 		MenuItem exitMenuItem = (MenuItem)beanFactory.getBean("exitMenuItem");
-		exitMenuItem.setOnAction(e -> System.exit(0));
-		exitMenuItem.setAccelerator(KeyCombination.valueOf("q"));
+		exitMenuItem.setOnAction(e -> {
+			stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
+		});
 		
-		MenuItem leaderBoard = new MenuItem("Leaderboard");
+		MenuItem leaderBoard = (MenuItem)beanFactory.getBean("leaderboardMenu");
 		leaderBoard.setOnAction(e -> {
 			leaderboard.displayLeaderboard();
 		});
-		leaderBoard.setAccelerator(KeyCombination.valueOf("l"));
-		
 		
 		Menu timerMenu = new Menu("Timer");
-		MenuItem pause = new MenuItem("Pause");
+		MenuItem pause = (MenuItem)beanFactory.getBean("pauseTimer");
 		pause.setOnAction(e -> {
 			timerRunning = false;
 			TIMER.pause();
 		});
-		pause.setAccelerator(KeyCombination.valueOf("p"));
 		timerMenu.getItems().add(pause);
 		
 		Menu boardSize = new Menu("Board Size");
@@ -128,9 +126,9 @@ public class MineSweeper extends Application{
 	}
 	
 	private void setBoardSizeMenuText(){
-		large.setText(gameBoardSize.equals("Large") ? "\u00D7 Normal" : "  Normal");
-		medium.setText(gameBoardSize.equals("Medium") ? "\u00D7 Small" : "  Small");
-		small.setText(gameBoardSize.equals("Small") ? "\u00D7 Very Small" : "  Very Small");
+		large.setText(gameBoardSize.equals("Large") ? "\u2713 Normal" : "  Normal");
+		medium.setText(gameBoardSize.equals("Medium") ? "\u2713 Small" : "  Small");
+		small.setText(gameBoardSize.equals("Small") ? "\u2713 Very Small" : "  Very Small");
 	}
 	
 	private void setBoardSize(){
@@ -288,11 +286,10 @@ public class MineSweeper extends Application{
 		totalNumberOfMines = totalNumberOfSquares / 6;
 		remainingBombs = totalNumberOfMines;
 		remainingBombsLabel.setText("Bombs remaining = " + remainingBombs);
-		int w = -1;
-		int h = -1;
 			if(logger.isDebugEnabled()){
 				logger.debug("created " + boardWidth + " X " + boardHeight + " board with " + totalNumberOfMines + " mines");
 			}
+		int w, h;
 		for(int i = 0; i < totalNumberOfMines; i++){
 				do{
 					w = ThreadLocalRandom.current().nextInt(boardWidth);

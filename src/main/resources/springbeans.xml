@@ -14,12 +14,44 @@
 		<property name="id" value="menu"/>
 	</bean>
 	
-	<bean id="resetMenuItem" class="javafx.scene.control.MenuItem">
-		<constructor-arg type="java.lang.String" value="Reset"/>
+	<bean id="leaderboardMenu" class="javafx.scene.control.MenuItem">
+		<constructor-arg type="java.lang.String" value="Leaderboard"/>
+		<property name="id" value="menuItem"/>
+		<property name="accelerator">
+		    <bean class="javafx.scene.input.KeyCombination" factory-method="valueOf">
+		        <constructor-arg type="java.lang.String" value="l"/>
+		    </bean>
+		</property>
 	</bean>
 	
-		<bean id="exitMenuItem" class="javafx.scene.control.MenuItem">
+	<bean id="resetMenuItem" class="javafx.scene.control.MenuItem">
+		<constructor-arg type="java.lang.String" value="Reset"/>
+		<property name="id" value="menuItem"/>
+		<property name="accelerator">
+		    <bean class="javafx.scene.input.KeyCombination" factory-method="valueOf">
+		        <constructor-arg type="java.lang.String" value="Enter"/>
+		    </bean>
+		</property>
+	</bean>
+	
+	<bean id="exitMenuItem" class="javafx.scene.control.MenuItem">
 		<constructor-arg type="java.lang.String" value="Quit"/>
+		<property name="id" value="menuItem"/>
+		<property name="accelerator">
+		    <bean class="javafx.scene.input.KeyCombination" factory-method="valueOf">
+		        <constructor-arg type="java.lang.String" value="q"/>
+		    </bean>
+		</property>
+	</bean>
+		
+	<bean id="pauseTimer" class="javafx.scene.control.MenuItem">
+		<constructor-arg type="java.lang.String" value="Pause"/>
+		<property name="id" value="menuItem"/>
+		<property name="accelerator">
+		    <bean class="javafx.scene.input.KeyCombination" factory-method="valueOf">
+		        <constructor-arg type="java.lang.String" value="p"/>
+		    </bean>
+		</property>
 	</bean>
 	
 	
@@ -36,6 +68,7 @@
 	
 	<bean name="label" class="javafx.scene.control.Label" scope="prototype">
 		<property name="padding" ref="paddingInsets"/>
+		<property name="id" value="label"/>
 	</bean>
 	
 	<bean name="timerLabel" parent="label" scope="singleton">
