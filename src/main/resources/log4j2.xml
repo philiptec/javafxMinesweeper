@@ -4,23 +4,16 @@
         <Console name="console" target="SYSTEM_OUT">
             <PatternLayout pattern="%p from %c at %d{dd/MM/yyyy HH:mm:ss} %m%n"/>
         </Console>
-<<<<<<< HEAD
   	</Appenders>
         <Loggers>
             <Root level="ERROR">
                 <Appender-Ref ref="console"/>
             </Root>
         </Loggers>
-=======
     </Appenders>
     <Loggers>
     	<Root level="WARN">
             <Appender-Ref ref="console"/>
         </Root>
     </Loggers>
-<<<<<<< HEAD
->>>>>>> dev
 </Configuration>
-=======
-</Configuration>
->>>>>>> dev
