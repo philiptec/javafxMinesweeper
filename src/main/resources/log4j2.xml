@@ -14,9 +14,13 @@
 =======
     </Appenders>
     <Loggers>
-    	<Root level="DEBUG">
+    	<Root level="WARN">
             <Appender-Ref ref="console"/>
         </Root>
     </Loggers>
+<<<<<<< HEAD
 >>>>>>> dev
 </Configuration>
+=======
+</Configuration>
+>>>>>>> dev
