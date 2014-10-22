@@ -40,7 +40,7 @@ public class MineSweeper extends Application{
 		private HBox timerAndBombCount;
 		private Leaderboard leaderboard;
 		private Stage stage;
-		private MenuItem small, medium, large;
+		private CheckMenuItem small, medium, large;
 
 	@Override
 	public void start(Stage stage) throws Exception{
@@ -95,10 +95,13 @@ public class MineSweeper extends Application{
 		timerMenu.getItems().add(pause);
 		
 		Menu boardSize = new Menu("Board Size");
-		small = new MenuItem();
-		medium = new MenuItem();
-		large = new MenuItem();
-		setBoardSizeMenuText();
+		small = new CheckMenuItem();
+		small.setText("Very Small");
+		medium = new CheckMenuItem();
+		medium.setText("Small");
+		large = new CheckMenuItem();
+		large.setText("Normal");
+		large.setSelected(true);
 		
 		small.setOnAction(e -> {
 			gameBoardSize = "Small";
@@ -126,9 +129,9 @@ public class MineSweeper extends Application{
 	}
 	
 	private void setBoardSizeMenuText(){
-		large.setText(gameBoardSize.equals("Large") ? "\u2713 Normal" : "  Normal");
-		medium.setText(gameBoardSize.equals("Medium") ? "\u2713 Small" : "  Small");
-		small.setText(gameBoardSize.equals("Small") ? "\u2713 Very Small" : "  Very Small");
+		small.setSelected(gameBoardSize.equals("Small"));
+		medium.setSelected(gameBoardSize.equals("Medium"));
+		large.setSelected(gameBoardSize.equals("Large"));
 	}
 	
 	private void setBoardSize(){
