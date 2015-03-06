@@ -81,6 +81,7 @@
           <source>1.8</source>
         </configuration>
       </plugin>
+<<<<<<< HEAD
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
@@ -97,4 +98,8 @@
       </plugin>
 	</plugins>
 	</build>
+=======
+    </plugins>
+  </build>
+>>>>>>> dev
 </project>
