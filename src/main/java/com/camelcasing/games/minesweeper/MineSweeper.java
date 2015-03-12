@@ -343,7 +343,7 @@ public class MineSweeper extends Application{
 	private void createBoard(){
 		board = new GridPane();
 		board.setPadding(new Insets(10, 30, 30, 30));
-		board.setAlignment(Pos.CENTER);
+//		board.setAlignment(Pos.CENTER);
 		boardAndInfo.setCenter(board);
 		rootPane.setCenter(boardAndInfo);
 	}

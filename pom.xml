@@ -9,7 +9,7 @@
   <url>http://maven.apache.org</url>
   <properties>
     <project.build.sourceEncodeing>UTF-8</project.build.sourceEncodeing>
-	<spring.version>4.0.6.RELEASE</spring.version>
+	<spring.version>4.1.5.RELEASE</spring.version>
   </properties>
   <dependencies>
     <dependency>
@@ -72,34 +72,15 @@
           </archive>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.1</version>
-        <configuration>
-          <target>1.8</target>
-          <source>1.8</source>
-        </configuration>
-      </plugin>
-<<<<<<< HEAD
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <version>2.3</version>
-        <executions>
-          <execution>
-            <id>attach-sources</id>
-            <phase>package</phase>
-            <goals>
-              <goal>jar-no-fork</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-	</plugins>
-	</build>
-=======
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-compiler-plugin</artifactId>
+			<version>3.2</version>
+			<configuration>
+				<target>1.8</target>
+				<source>1.8</source>
+			</configuration>
+		</plugin>
     </plugins>
   </build>
->>>>>>> dev
 </project>
