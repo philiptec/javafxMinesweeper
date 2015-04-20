@@ -1,16 +1,14 @@
 package com.camelcasing.games.minesweeper;
 
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.Random;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.scene.Scene;
@@ -22,7 +20,7 @@ public class MineSweeper extends Application{
 		public final static Logger logger = LogManager.getLogger(MineSweeper.class.getName());
 		public final static  ApplicationContext beanFactory = new ClassPathXmlApplicationContext("springbeans.xml");
 	
-		private TimerThread TIMER = new TimerThread();;
+		private TimerThread TIMER = new TimerThread();
 		
 		private int boardWidth;
 		private int boardHeight;
@@ -30,6 +28,7 @@ public class MineSweeper extends Application{
 		private int totalNumberOfSquares;
 		private int totalNumberOfMines;
 		private GridSquare[][] squares;
+		private int[] shuffledArray;
 		private GridPane board;
 		private BorderPane rootPane;
 		private BorderPane boardAndInfo;
@@ -287,20 +286,30 @@ public class MineSweeper extends Application{
 		logger.debug("bombAssignment started");
 		totalNumberOfSquares = boardWidth * boardHeight;
 		totalNumberOfMines = totalNumberOfSquares / 6;
+		randomlyAssignBombsToArray();
 		remainingBombs = totalNumberOfMines;
 		remainingBombsLabel.setText("Bombs remaining = " + remainingBombs);
-			if(logger.isDebugEnabled()){
-				logger.debug("created " + boardWidth + " X " + boardHeight + " board with " + totalNumberOfMines + " mines");
-			}
-		int w, h;
-		for(int i = 0; i < totalNumberOfMines; i++){
-				do{
-					w = ThreadLocalRandom.current().nextInt(boardWidth);
-					h = ThreadLocalRandom.current().nextInt(boardHeight);
-				}while(squares[w][h].isMine());
-			squares[w][h].setMine(true);
+		for(int i = totalNumberOfSquares - totalNumberOfMines; i < totalNumberOfSquares; i++){
+			int index = shuffledArray[i];
+			int row = index % boardWidth;
+			int column = index / boardWidth;
+			squares[row][column].setMine(true);
 		}
 		logger.debug("bombAssignment completed");
+	}
+	
+	private void randomlyAssignBombsToArray(){
+		shuffledArray = new int[totalNumberOfSquares];
+		
+		for(int i = 0; i < shuffledArray.length; i++) shuffledArray[i] = i;
+		
+		Random rnd = new Random();
+		for(int i = totalNumberOfSquares - 1; i > totalNumberOfSquares - totalNumberOfMines - 1; i--){
+			int swapIndex = rnd.nextInt(i);
+			int temp = shuffledArray[i];
+			shuffledArray[i] = shuffledArray[swapIndex];
+			shuffledArray[swapIndex] = temp;
+		}
 	}
 	
 	private void assignNumbers(){
@@ -343,7 +352,6 @@ public class MineSweeper extends Application{
 	private void createBoard(){
 		board = new GridPane();
 		board.setPadding(new Insets(10, 30, 30, 30));
-//		board.setAlignment(Pos.CENTER);
 		boardAndInfo.setCenter(board);
 		rootPane.setCenter(boardAndInfo);
 	}

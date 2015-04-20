@@ -41,6 +41,14 @@ public class GridSquare{
 		this.nextToCount = nextToCount;
 		gridSquare.setId("button" + nextToCount);
 	}
+	
+	public void assignId(){
+		gridSquare.setId("button" + nextToCount);
+	}
+	
+	public void incrementNextTo(){
+		this.nextToCount++;
+	}
 
 	public Button getGridSquare(){
 		return gridSquare;
